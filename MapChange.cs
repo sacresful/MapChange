@@ -540,7 +540,7 @@ namespace PRoConEvents
 
                 if (string.IsNullOrEmpty(mapName) || string.IsNullOrEmpty(gameMode))
                 {
-                    this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode, and number of rounds) must be from the /maps /gamemodes.", "player", speaker);
+                    this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
                     return;
                 }
 
