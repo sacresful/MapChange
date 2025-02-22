@@ -532,22 +532,15 @@ namespace PRoConEvents
                 this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "all", speaker);
             }
             */
-            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
             if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
             {
                 string mapName = match.Groups[1].Value;
                 string gameMode = match.Groups[2].Value;
-                string numberOfRoundsString = match.Groups[3].Value;
 
-                if (string.IsNullOrEmpty(mapName) || string.IsNullOrEmpty(gameMode) || string.IsNullOrEmpty(numberOfRoundsString))
+                if (string.IsNullOrEmpty(mapName) || string.IsNullOrEmpty(gameMode))
                 {
                     this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode, and number of rounds) must be from the /maps /gamemodes.", "player", speaker);
-                    return;
-                }
-
-                if (!int.TryParse(numberOfRoundsString, out int numberOfRounds))
-                {
-                    this.ExecuteCommand("procon.protected.send", "admin.say", "Invalid number of rounds. Please enter a valid number.", "player", speaker);
                     return;
                 }
 
@@ -567,8 +560,8 @@ namespace PRoConEvents
                 mappedGamemodes.TryGetValue(gameMode, out string internal_gameMode);
 
                 this.ExecuteCommand("procon.protected.send", "mapList.clear");
-                this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, numberOfRounds.ToString());
-                this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {mapName} {gameMode} {numberOfRounds}", "all", speaker);
+                this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
+                this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {mapName} {gameMode}", "all", speaker);
                 string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
                 string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
                 string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
