@@ -231,43 +231,6 @@ namespace PRoConEvents
                 }
             }
 
-            public bool SetVote(string name, int vote)
-            {
-                foreach (Player p in m_listPlayers)
-                {
-                    if (p.SoldierName == name)
-                    {
-                        p.Vote = vote;
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            public bool HasVoted { get; private set; } = false;
-
-            public bool SetVoteBool()
-            {
-                if (HasVoted)
-                {
-                    return false; 
-                }
-
-                HasVoted = true; 
-                return true; 
-            }
-            public void ResetVote()
-            {
-                HasVoted = false;
-            }
-            public void ResetVotes()
-            {
-                foreach (Player p in m_listPlayers)
-                {
-                    ResetVote();
-                }
-            }
-
             public Player GetPlayer(string name)
             {
                 foreach (Player p in m_listPlayers)
@@ -533,7 +496,7 @@ namespace PRoConEvents
             CPrivileges cpPlayerPrivs = this.GetAccountPrivileges(speaker);
 
             Match match;
-            match = Regex.Match(message, @"^/maps\s*", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"maps", RegexOptions.IgnoreCase);//@"^/maps\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 WritePluginConsole(speaker + " requested list of maps", "Info", 3);
@@ -541,7 +504,7 @@ namespace PRoConEvents
                 return;
             }
 
-            match = Regex.Match(message, @"^/gamemodes\s*", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"gamemode\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 WritePluginConsole(speaker + " has requested list of gamemodes", "Info", 3);
@@ -549,7 +512,7 @@ namespace PRoConEvents
                 return;
             }
 
-            match = Regex.Match(message, @"^/fullgamemodes\s*", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"fullgamemode\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 WritePluginConsole(speaker + " has requested list of full gamemodes", "Info", 3);
@@ -557,7 +520,7 @@ namespace PRoConEvents
                 return;
             }
 
-            match = Regex.Match(message, @"^/restart\s*", RegexOptions.IgnoreCase);
+            /* match = Regex.Match(message, @"" + m_strHosVotePrefix + @"restart", RegexOptions.IgnoreCase);
             if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "Restarting round", "all", speaker);
@@ -568,8 +531,8 @@ namespace PRoConEvents
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "all", speaker);
             }
-
-            match = Regex.Match(message, @"^/map\s*(\S*)\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
+            */
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
             if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
             {
                 string mapName = match.Groups[1].Value;
