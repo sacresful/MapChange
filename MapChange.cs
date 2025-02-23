@@ -496,14 +496,14 @@ namespace PRoConEvents
             CPrivileges cpPlayerPrivs = this.GetAccountPrivileges(speaker);
 
             Match match;
-            /* match = Regex.Match(message, @"" + m_strHosVotePrefix + @"maps", RegexOptions.IgnoreCase);//@"^/maps\s*", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"listmaps", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 WritePluginConsole(speaker + " requested list of maps", "Info", 3);
                 DisplayListOfMaps();
                 return;
             }
-            */
+
             match = Regex.Match(message, @"" + m_strHosVotePrefix + @"gamemode\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -520,7 +520,14 @@ namespace PRoConEvents
                 return;
             }
 
-            /* match = Regex.Match(message, @"" + m_strHosVotePrefix + @"restart", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"restart", RegexOptions.IgnoreCase);
+            if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
+            {
+                this.ExecuteCommand("procon.protected.send", "admin.say", "Try using /frestart", "player", speaker);
+                return;
+            }
+
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"frestart", RegexOptions.IgnoreCase);
             if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "Restarting round", "all", speaker);
@@ -529,9 +536,10 @@ namespace PRoConEvents
             }
             else if (match.Success) 
             {
-                this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "all", speaker);
+                this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
+                return;
             }
-            */
+
             match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
             if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
             {
@@ -591,18 +599,13 @@ namespace PRoConEvents
                 {
                     this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
                     this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
-                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "3000");
+                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
                 }
                 this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                 WritePluginConsole(speaker  + " has changed the map", "Info", 3);
                 return;
             }
-            if(!cpPlayerPrivs.CanUseMapFunctions)
-            {
-                this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
-                return;
-            }
-            else
+            else if (match.Success)
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
                 return;
