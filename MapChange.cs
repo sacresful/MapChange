@@ -496,14 +496,14 @@ namespace PRoConEvents
             CPrivileges cpPlayerPrivs = this.GetAccountPrivileges(speaker);
 
             Match match;
-            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"maps", RegexOptions.IgnoreCase);//@"^/maps\s*", RegexOptions.IgnoreCase);
+            /* match = Regex.Match(message, @"" + m_strHosVotePrefix + @"maps", RegexOptions.IgnoreCase);//@"^/maps\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 WritePluginConsole(speaker + " requested list of maps", "Info", 3);
                 DisplayListOfMaps();
                 return;
             }
-
+            */
             match = Regex.Match(message, @"" + m_strHosVotePrefix + @"gamemode\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
@@ -558,10 +558,12 @@ namespace PRoConEvents
 
                 mappedMaps.TryGetValue(mapName, out string internal_mapName);
                 mappedGamemodes.TryGetValue(gameMode, out string internal_gameMode);
+                string actualMapName = mappedMaps.FirstOrDefault(x => x.Value == internal_mapName).Key;
+                string actualGameMode = mappedGamemodes.FirstOrDefault(x => x.Value == internal_gameMode).Key;
 
                 this.ExecuteCommand("procon.protected.send", "mapList.clear");
                 this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
-                this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {mapName} {gameMode}", "all", speaker);
+                this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode}", "all", speaker);
                 string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
                 string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
                 string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
@@ -592,11 +594,18 @@ namespace PRoConEvents
                     this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "3000");
                 }
                 this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
+                WritePluginConsole(speaker  + " has changed the map", "Info", 3);
                 return;
             }
-            else if (match.Success)
+            if(!cpPlayerPrivs.CanUseMapFunctions)
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
+                return;
+            }
+            else
+            {
+                this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
+                return;
             }
         }
     }
