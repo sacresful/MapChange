@@ -581,12 +581,14 @@ namespace PRoConEvents
                 {
                     this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
                     this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
+                    this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
                 }
                 else if (internal_gameMode == "SquadObliteration0")
                 {
                     this.ExecuteCommand("procon.protected.send", "vars.preset", m_strPreset);
                     this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
                     this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
+                    this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
                 }
                 /* TODO 8v8
                  * else if (internal_gameMode == "ConquestSmall0")
@@ -599,7 +601,8 @@ namespace PRoConEvents
                 {
                     this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
                     this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
-                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999"); 
+                    this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
                 }
                 this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                 WritePluginConsole(speaker  + " has changed the map", "Info", 3);
