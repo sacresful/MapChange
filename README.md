@@ -7,11 +7,11 @@ This plugin is not made for public servers.
 
 # Basic commands
 
-/map - takes 3 arguments - mapName, gameMode. Use variables from commands below - changes the map.
-/listmaps - lists all map names that can be used in the map/changemap command.
-/gamemodes - lists all gamemodes that can be used in the map/changemap command.
-/fullgamemodes - full name of gamemodes, for explanation purposes.
-/frestart - restarts the round. Requires MapFunctionPriviliges to use it.
+/map - takes 3 arguments - mapName, gameMode. Use variables from commands below - changes the map. </br>
+/listmaps - lists all map names that can be used in the map/changemap command. </br>
+/gamemodes - lists all gamemodes that can be used in the map/changemap command. </br>
+/fullgamemodes - full name of gamemodes, for explanation purposes. </br>
+/frestart - restarts the round. Requires MapFunctionPriviliges to use it. </br>
 
 # How to install
 
