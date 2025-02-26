@@ -83,7 +83,6 @@ namespace PRoConEvents
             {
                 this.m_iGamemodeCounterDOM = iValue;
             }
-     
             else if (strVariable.CompareTo("RoundtimeLimitDOM") == 0 && int.TryParse(strValue, out iValue) == true)
             {
                 this.m_iRoundtimeLimitDOM = iValue;
@@ -590,13 +589,13 @@ namespace PRoConEvents
                     this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
                     this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
                 }
-                /* TODO 8v8
-                 * else if (internal_gameMode == "ConquestSmall0")
+                else if (internal_gameMode == "ConquestSmall0")
                 {
-                    this.ExecuteCommand("procon.protected.send", "vars.preset", m_strPreset);
-                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
-                    this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
-                } */
+                    this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                    this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
+                    this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
+                    this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                } 
                 else
                 {
                     this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
