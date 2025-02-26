@@ -52,6 +52,7 @@ namespace PRoConEvents
             List<CPluginVariable> lstReturn = new List<CPluginVariable>();
             lstReturn.Add(new CPluginVariable("Voting|Uservote prefix", this.m_strHosVotePrefix.GetType(), this.m_strHosVotePrefix));
             lstReturn.Add(new CPluginVariable("Permissions|RequirePerms", typeof(enumBoolYesNo), this.RequirePerms));
+            lstReturn.Add(new CPluginVariable("Options|DefaultRounds", this.m_iDefaultRounds.GetType(), this.m_iDefaultRounds));
             lstReturn.Add(new CPluginVariable("Domination|GamemodeCounterDOM", this.m_iGamemodeCounterDOM.GetType(), this.m_iGamemodeCounterDOM));
             lstReturn.Add(new CPluginVariable("Domination|RoundtimeLimitDOM", this.m_iRoundtimeLimitDOM.GetType(), this.m_iRoundtimeLimitDOM));
             lstReturn.Add(new CPluginVariable("SquadObliteration|Preset", this.m_strPreset.GetType(), this.m_strPreset));
@@ -66,6 +67,7 @@ namespace PRoConEvents
             List<CPluginVariable> lstReturn = new List<CPluginVariable>();
             lstReturn.Add(new CPluginVariable("Uservote prefix", this.m_strHosVotePrefix.GetType(), this.m_strHosVotePrefix));
             lstReturn.Add(new CPluginVariable("RequirePerms", typeof(enumBoolYesNo), this.RequirePerms));
+            lstReturn.Add(new CPluginVariable("DefaultRounds", this.m_iDefaultRounds.GetType(), this.m_iDefaultRounds));
             lstReturn.Add(new CPluginVariable("GamemodeCounterDOM", this.m_iGamemodeCounterDOM.GetType(), this.m_iGamemodeCounterDOM));
             lstReturn.Add(new CPluginVariable("RoundtimeLimitDOM", this.m_iRoundtimeLimitDOM.GetType(), this.m_iRoundtimeLimitDOM));
             lstReturn.Add(new CPluginVariable("Preset", this.m_strPreset.GetType(), this.m_strPreset));
@@ -80,6 +82,10 @@ namespace PRoConEvents
             if (strVariable.CompareTo("Uservote prefix") == 0)
             {
                 this.m_strHosVotePrefix = strValue;
+            }
+            else if (strVariable.CompareTo("DefaultRounds") == 0 && int.TryParse(strValue, out iValue) == true)
+            {
+                this.m_iRoundtimeLimitDOM = iValue;
             }
             else if (strVariable.CompareTo("RequirePerms") == 0 && Enum.IsDefined(typeof(enumBoolYesNo), strValue) == true)
             {
@@ -192,6 +198,7 @@ namespace PRoConEvents
         #endregion
 
         private enumBoolYesNo RequirePerms = enumBoolYesNo.Yes;
+        private int m_iDefaultRounds = 2;
 
         private string m_strHostName;
         private string m_strPort;
@@ -588,10 +595,11 @@ namespace PRoConEvents
                     mappedGamemodes.TryGetValue(gameMode, out string internal_gameMode);
                     string actualMapName = mappedMaps.FirstOrDefault(x => x.Value == internal_mapName).Key;
                     string actualGameMode = mappedGamemodes.FirstOrDefault(x => x.Value == internal_gameMode).Key;
+                    string m_strDefaultRounds = m_iDefaultRounds.ToString();
 
                     this.ExecuteCommand("procon.protected.send", "mapList.clear");
-                    this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
-                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode}", "all", speaker);
+                    this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, m_strDefaultRounds);
+                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode} {m_strDefaultRounds}", "all", speaker);
                     string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
                     string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
                     string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
@@ -663,10 +671,11 @@ namespace PRoConEvents
                     mappedGamemodes.TryGetValue(gameMode, out string internal_gameMode);
                     string actualMapName = mappedMaps.FirstOrDefault(x => x.Value == internal_mapName).Key;
                     string actualGameMode = mappedGamemodes.FirstOrDefault(x => x.Value == internal_gameMode).Key;
+                    string m_strDefaultRounds = m_iDefaultRounds.ToString();
 
                     this.ExecuteCommand("procon.protected.send", "mapList.clear");
                     this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
-                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode}", "all", speaker);
+                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode} {m_strDefaultRounds}", "all", speaker);
                     string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
                     string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
                     string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
