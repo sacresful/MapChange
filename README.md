@@ -15,15 +15,15 @@ This plugin is not made for public servers.
 
 # How to install
 
-    Go to releases and download the zip.
-    Extract the SimpleVotemap.cs file in (wherever u have procon installed)Procon\Plugins\BF4
+1. Go to releases and download the zip.
+2. Extract the MapChange.cs file in (wherever u have procon installed)Procon\Plugins\BF4
 
 # How do i give MapFunctionPriviliges to user:
 
-    Open procon, login into procon layer of the server.
-    Go to the account tab.
-    Manage accounts -> Create new account
-    In username USE your current username that you use ingame
-    Click on the account you just created.
-    Set privilges on all server layers
-    Find "Server state" section -> change current map functions.
+1. Open procon, login into procon layer of the server. 
+2. Go to the account tab.
+3. Manage accounts -> Create new account
+4. In username USE your current username that you use ingame
+5. Click on the account you just created.
+6. Set privilges on all server layers
+7. Find "Server state" section -> change current map functions.
