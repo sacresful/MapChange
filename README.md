@@ -27,7 +27,7 @@ Procon layer hosted by gportal:
 5. Start the procon layer.
 6. To connect use:
    - IP Address
-   - Port that is listed UNDER the IP address (not the one next to it)
+   - Port that is listed UNDER the IP address (do not use the ip listed next to the port)
    - Username and password as listed.
 7. Enable the plugin in parent layer control.
 
