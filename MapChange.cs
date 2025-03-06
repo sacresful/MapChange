@@ -1,6 +1,4 @@
-﻿// 5v5 version
-
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Reflection;
@@ -44,7 +42,7 @@ namespace PRoConEvents
         }
         public string GetPluginDescription()
         {
-            return "On-demand map change plugin for 5v5 and 8v8";
+            return "On-demand map change plugin for 2v2, 5v5 and 8v8";
         }
 
         public List<CPluginVariable> GetDisplayPluginVariables()
@@ -129,6 +127,7 @@ namespace PRoConEvents
         public void OnPluginEnable()
         {
             this.ExecuteCommand("procon.protected.pluginconsole.write", "^bMapChange ^2Enabled!");
+            this.ExecuteCommand("procon.protected.send", "serverInfo");
         }
         public void OnPluginDisable()
         {
@@ -162,16 +161,19 @@ namespace PRoConEvents
         }
         public void OnRestartLevel()
         {
-            WritePluginConsole("Level Restarted: Stopping voting system", "Work", 3);
+            WritePluginConsole("Level Restarted.", "Work", 3);
+            this.ExecuteCommand("procon.protected.send", "serverInfo");
         }
         public void OnRoundOver(int winningTeamId)
         {
-            WritePluginConsole("Round Over: Stopping voting system", "Work", 3);
+            WritePluginConsole("Round Over.", "Work", 3);
+            this.ExecuteCommand("procon.protected.send", "serverInfo");
         }
 
         public void OnRunNextLevel()
         {
-            WritePluginConsole("Running nextmap: Stopping voting system", "Work", 3);
+            WritePluginConsole("Running nextmap.", "Work", 3);
+            this.ExecuteCommand("procon.protected.send", "serverInfo");
         }
 
         public void OnServerInfo(CServerInfo csiServerInfo)
@@ -566,6 +568,159 @@ namespace PRoConEvents
                 }
             }
 
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)$", RegexOptions.IgnoreCase);
+            if (RequirePerms == enumBoolYesNo.Yes)
+            {
+                if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
+                {
+                    string mapName = match.Groups[1].Value;
+                    string gameMode = this.currentGameMode;
+
+                    if (string.IsNullOrEmpty(gameMode))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Game mode has not been initialized yet.", "speaker", speaker);
+                        this.ExecuteCommand("procon.protected.send", "serverInfo");
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Wait a couple seconds before running command again.", "speaker", speaker);
+                        return;  
+                    }
+
+                    if (string.IsNullOrEmpty(mapName))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        return;
+                    }
+
+                    if (!mappedMaps.ContainsKey(mapName))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Invalid map name. Please use a valid map from the list.", "player", speaker);
+                        return;
+                    }
+
+                    mappedMaps.TryGetValue(mapName, out string internal_mapName);
+                    string internal_gameMode = gameMode;
+                    string actualMapName = mappedMaps.FirstOrDefault(x => x.Value == internal_mapName).Key;
+                    string actualGameMode = mappedGamemodes.FirstOrDefault(x => x.Value == internal_gameMode).Key;
+                    string m_strDefaultRounds = m_iDefaultRounds.ToString();
+
+                    this.ExecuteCommand("procon.protected.send", "mapList.clear");
+                    this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
+                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode} {m_strDefaultRounds}", "all", speaker);
+                    string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
+                    string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
+                    string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
+                    string m_iRoundtimeLimitSOBString = m_iRoundtimeLimitSOB.ToString();
+
+                    if (internal_gameMode == "Domination0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else if (internal_gameMode == "SquadObliteration0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", m_strPreset);
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else if (internal_gameMode == "ConquestSmall0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                    }
+                    this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
+                    WritePluginConsole(speaker + " has changed the map", "Info", 3);
+                    return;
+                }
+                else if (match.Success)
+                {
+                    this.ExecuteCommand("procon.protected.send", "admin.say", "You do not have enough privilages.", "player", speaker);
+                    return;
+                }
+            }
+            else
+            {
+                if (match.Success)
+                {
+                    string mapName = match.Groups[1].Value;
+                    string gameMode = this.currentGameMode;
+
+                    if (string.IsNullOrEmpty(gameMode))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Game mode has not been initialized yet.", "speaker", speaker);
+                        this.ExecuteCommand("procon.protected.send", "serverInfo");
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Wait a couple seconds before running command again.", "speaker", speaker);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(mapName))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        return;
+                    }
+
+                    if (!mappedMaps.ContainsKey(mapName))
+                    {
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "Invalid map name. Please use a valid map from the list.", "player", speaker);
+                        return;
+                    }
+
+                    mappedMaps.TryGetValue(mapName, out string internal_mapName);
+                    string internal_gameMode = gameMode;
+                    string actualMapName = mappedMaps.FirstOrDefault(x => x.Value == internal_mapName).Key;
+                    string actualGameMode = mappedGamemodes.FirstOrDefault(x => x.Value == internal_gameMode).Key;
+                    string m_strDefaultRounds = m_iDefaultRounds.ToString();
+
+                    this.ExecuteCommand("procon.protected.send", "mapList.clear");
+                    this.ExecuteCommand("procon.protected.send", "mapList.add", internal_mapName, internal_gameMode, "2");
+                    this.ExecuteCommand("procon.protected.send", "admin.say", $"Changing map to: {actualMapName} {actualGameMode} {m_strDefaultRounds}", "all", speaker);
+                    string m_iGamemodeCounterDOMString = m_iGamemodeCounterDOM.ToString();
+                    string m_iRoundtimeLimitDOMString = m_iRoundtimeLimitDOM.ToString();
+                    string m_iGamemodeCounterSOBString = m_iGamemodeCounterSOB.ToString();
+                    string m_iRoundtimeLimitSOBString = m_iRoundtimeLimitSOB.ToString();
+
+                    if (internal_gameMode == "Domination0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else if (internal_gameMode == "SquadObliteration0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", m_strPreset);
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else if (internal_gameMode == "ConquestSmall0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                    }
+                    else
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                    }
+                    this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
+                    WritePluginConsole(speaker + " has changed the map", "Info", 3);
+                    return;
+                }
+            }
+
             match = Regex.Match(message, @"" + m_strHosVotePrefix + @"map\s*(\S*)\s*(\S*)$", RegexOptions.IgnoreCase);
             if (RequirePerms == enumBoolYesNo.Yes) {
                 if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
@@ -713,7 +868,10 @@ namespace PRoConEvents
                     return;
                 }
             }
+           
 
         }
+
+
     }
 }
