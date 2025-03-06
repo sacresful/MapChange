@@ -15,8 +15,21 @@ This plugin is not made for public servers.
 
 # How to install
 
+Local procon layer:
 1. Go to releases and download the zip.
-2. Extract the MapChange.cs file in (wherever u have procon installed)Procon\Plugins\BF4
+2. Extract the MapChange.cs file in (wherever u have procon installed)Procon\Plugins\BF4.
+
+Procon layer hosted by gportal:
+1. Go to the server page and find procon layer page.
+2. Disable the procon layer.
+3. Go to the FTP page and use the credentials from there to connect through any ftp client (example: filezilla).
+4. Extract the MapChange.cs file into Plugins\BF4.
+5. Start the procon layer.
+6. To connect use:
+   - IP Address
+   - Port that is listed UNDER the IP address (not the one next to it)
+   - Username and password as listed.
+7. Enable the plugin in parent layer control.
 
 # How do i give MapFunctionPriviliges to user:
 
