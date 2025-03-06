@@ -411,30 +411,30 @@ namespace PRoConEvents
             { "Siege",        "mp_siege" },
             { "Zavod",        "mp_abandoned" },
             // China Rising
-            { "Altai",      "xp1_001" },
-            { "Dragonpass", "xp1_002" },
-            { "Guilin",     "xp1_003" },
-            { "Silk",       "xp1_004" },
+            { "Silk",         "xp1_001" },
+            { "Altai",        "xp1_002" },
+            { "Guilin",       "xp1_003" },
+            { "Dragonpass",   "xp1_004" },
             // Second Assault
-            { "Caspian",   "mp_007" },
-            { "Oman",      "xp1_002_Oman" },
-            { "Firestorm", "mp_012_Firestorm" },
-            { "Metro",     "mp_subway" },
+            { "Caspian",      "mp_007" },
+            { "Oman",         "xp1_002_Oman" },
+            { "Firestorm",    "mp_012_Firestorm" },
+            { "Metro",        "mp_subway" },
             // Naval Strike
-            { "Lost",        "xp2_001"  },
-            { "Nansha",      "xp2_002"  },
-            { "Mortar",      "xp2_003"  },
-            { "Wavebreaker", "xp2_004"  },
+            { "Lost",         "xp2_001"  },
+            { "Nansha",       "xp2_002"  },
+            { "Mortar",       "xp2_003"  },
+            { "Wavebreaker",  "xp2_004"  },
             // Dragon's Teeth
-            { "Pearl",      "xp3_Marketplace" },
-            { "Propaganda", "xp3_Propaganda" },
-            { "Lumphini",   "xp3_UrbanGarden" },
-            { "Sunken",     "xp3_Waterfront" },
+            { "Pearl",        "xp3_Marketplace" },
+            { "Propaganda",   "xp3_Propaganda" },
+            { "Lumphini",     "xp3_UrbanGarden" },
+            { "Sunken",       "xp3_Waterfront" },
             // Final Stand
-            { "Whiteout",   "xp4_Arctic" },
-            { "Hammerhead", "xp4_SubBase" },
-            { "Hangar21",   "xp4_Titan" },
-            { "Karelia",    "xp4_WalkerFactory" }
+            { "Whiteout",     "xp4_Arctic" },
+            { "Hammerhead",   "xp4_SubBase" },
+            { "Hangar21",     "xp4_Titan" },
+            { "Karelia",      "xp4_WalkerFactory" }
         };
         private Dictionary<string, string> mappedGamemodes = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase){
             { "AS", "AirSuperiority0" },
@@ -512,26 +512,18 @@ namespace PRoConEvents
             CPrivileges cpPlayerPrivs = this.GetAccountPrivileges(speaker);
 
             Match match;
-            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"listmaps", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"list", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                WritePluginConsole(speaker + " requested list of maps", "Info", 3);
+                WritePluginConsole(speaker + " requested list", "Info", 3);
                 DisplayListOfMaps();
-                return;
-            }
-
-            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"gamemode\s*", RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                WritePluginConsole(speaker + " has requested list of gamemodes", "Info", 3);
                 DisplayListOfGamemodes();
                 return;
             }
 
-            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"fullgamemode\s*", RegexOptions.IgnoreCase);
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"gamemodes\s*", RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                WritePluginConsole(speaker + " has requested list of full gamemodes", "Info", 3);
                 DisplayListOfFullGamemodes();
                 return;
             }
@@ -615,6 +607,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "SquadObliteration0")
                     {
@@ -622,6 +615,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "ConquestSmall0")
                     {
@@ -629,6 +623,15 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
+                    }
+                    else if (internal_gameMode == "AirSuperiority0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "30");
                     }
                     else
                     {
@@ -636,6 +639,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                     WritePluginConsole(speaker + " has changed the map", "Info", 3);
@@ -693,6 +697,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "SquadObliteration0")
                     {
@@ -700,6 +705,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "ConquestSmall0")
                     {
@@ -707,6 +713,15 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
+                    }
+                    else if (internal_gameMode == "AirSuperiority0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "30");
                     }
                     else
                     {
@@ -714,6 +729,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                     WritePluginConsole(speaker + " has changed the map", "Info", 3);
@@ -765,6 +781,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "SquadObliteration0")
                     {
@@ -772,6 +789,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "ConquestSmall0")
                     {
@@ -779,13 +797,23 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
-                    } 
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
+                    }
+                    else if (internal_gameMode == "AirSuperiority0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "30");
+                    }
                     else
                     {
                         this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999"); 
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                     WritePluginConsole(speaker  + " has changed the map", "Info", 3);
@@ -841,6 +869,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitDOMString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "SquadObliteration0")
                     {
@@ -848,6 +877,7 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", m_iGamemodeCounterSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", m_iRoundtimeLimitSOBString);
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     else if (internal_gameMode == "ConquestSmall0")
                     {
@@ -855,6 +885,15 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "67");
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "120");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "100");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
+                    }
+                    else if (internal_gameMode == "AirSuperiority0")
+                    {
+                        this.ExecuteCommand("procon.protected.send", "vars.preset", "normal");
+                        this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
+                        this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
+                        this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "30");
                     }
                     else
                     {
@@ -862,13 +901,33 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "vars.roundTimeLimit", "9999999");
                         this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter", "9999");
                         this.ExecuteCommand("procon.protected.send", "vars.soldierHealth", "500");
+                        this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", "60");
                     }
                     this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                     WritePluginConsole(speaker + " has changed the map", "Info", 3);
                     return;
                 }
             }
-           
+
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"tick\s*(.+)", RegexOptions.IgnoreCase);
+            if (RequirePerms == enumBoolYesNo.Yes)
+            {
+                if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
+                {
+                    string hz = match.Groups[1].Value;
+                    this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", hz);
+                    this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
+                }
+            }
+            else
+            {
+                if (match.Success)
+                {
+                    string hz = match.Groups[1].Value;
+                    this.ExecuteCommand("procon.protected.send", "vars.OutHighFrequency", hz);
+                    this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
+                }
+            }
 
         }
 
