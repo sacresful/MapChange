@@ -586,7 +586,7 @@ namespace PRoConEvents
 
                     if (string.IsNullOrEmpty(mapName))
                     {
-                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /list", "player", speaker);
                         return;
                     }
 
@@ -659,7 +659,7 @@ namespace PRoConEvents
 
                     if (string.IsNullOrEmpty(mapName))
                     {
-                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /list", "player", speaker);
                         return;
                     }
 
@@ -718,7 +718,7 @@ namespace PRoConEvents
 
                     if (string.IsNullOrEmpty(mapName) || string.IsNullOrEmpty(gameMode))
                     {
-                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /list", "player", speaker);
                         return;
                     }
 
@@ -787,7 +787,7 @@ namespace PRoConEvents
 
                     if (string.IsNullOrEmpty(mapName) || string.IsNullOrEmpty(gameMode))
                     {
-                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /maps /gamemodes.", "player", speaker);
+                        this.ExecuteCommand("procon.protected.send", "admin.say", "All parameters (map name, game mode) must be from the /list", "player", speaker);
                         return;
                     }
 
