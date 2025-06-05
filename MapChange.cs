@@ -868,7 +868,30 @@ namespace PRoConEvents
                     this.ExecuteCommand("procon.protected.send", "mapList.runNextRound");
                 }
             }
-            /*
+
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"2v2", RegexOptions.IgnoreCase)
+            if (RequirePerms == enumBoolYesNo.Yes)
+            {
+                if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
+                {
+                    string mode = match.Groups[1].Value;
+                    this.ExecuteCommand("procon.protected.send", "admin.say", "Changing mode to 2v2 ", "all", speaker);
+                    SetOptions("normal", "9999", "9999", "500", "1")
+				}
+            }
+
+            match = Regex.Match(message, @"" + m_strHosVotePrefix + @"8v8", RegexOptions.IgnoreCase)
+			if (RequirePerms == enumBoolYesNo.Yes)
+            {
+				if (match.Success && cpPlayerPrivs.CanUseMapFunctions)
+				{
+					string mode = match.Groups[1].Value;
+					this.ExecuteCommand("procon.protected.send", "admin.say", "Changing mode to 8v8", "all", speaker);
+					SetOptions("normal", "9999", "67", "100", "100")
+				}
+			}
+
+			/*
             match = Regex.Match(message, @"" + m_strHosVotePrefix + @"factions\s+(\d+)\s+(\d+)", RegexOptions.IgnoreCase);
             if (RequirePerms == enumBoolYesNo.Yes)
             {
@@ -895,6 +918,6 @@ namespace PRoConEvents
                 }
             }
             */
-        }
+		}
     }
 }
